@@ -1,0 +1,41 @@
+---
+title: "ProgStat-Examen"
+author: "Angélique Rivière"
+date: "2024-12-18"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+library(ggplot2)
+library(dplyr)
+```
+
+
+Fonction R qui lit les 60 fichiers csv avec les données de ventes
+du FXD JET 100 entre 2020-01-01 et 2024-12-31. Assurez vous que cette fonction peut être réutilisée pour lire les fichiers csv en utilisant des dates différentes que celles spécifiées ci-dessus comme 2020-01-01 et 2022-12-31 ou similaire.
+
+```{r}
+multmerge = function(mypath,debut,fin){
+  dataset = list.files(path=mypath, full.names=TRUE, pattern=".csv") %>%
+    lapply(read.csv, header=TRUE) %>%
+    bind_rows()
+  dataset
+  
+  donnees = dataset %>%
+    arrange(dataset$date)
+}
+#dataset[endswith(dataset, suffix = "01-2020.csv")]
+
+mydata = data.frame(multmerge(mypath="/home/UCA/anriviere4/TP-Rstudio/TP-ProgStat2/Exam/ExamProgS/exam_data"))
+mydata$date = as.Date(mydata$date)
+```
+
+
+Visualisation des données de ventes avec ggplot2, elle montre l’évolution des ventes entre 2020-01-01 et 2024-12-31.
+
+```{r}
+Base = ggplot(mydata,aes(x = date, y = nb_de_ventes)) + ggtitle("Nombre de ventes au fil des années")
+Base + geom_line()
+```
+
